@@ -18,33 +18,63 @@ public final class SimpleDemo {
 
     public static void main(String[] args) throws Exception {
         String xml =
-                "<interfaces>"
-                        + "<interface>"
-                        + "<name>eth0</name>"
-                        + "<description>Uplink to the core network</description>"
-                        + "<type>ethernetCsmacd</type>"
-                        + "<enabled>true</enabled>"
-                        + "<ipv4><address><ip>192.0.2.10</ip>"
-                        + "<prefix-length>24</prefix-length></address></ipv4>"
-                        + "</interface>"
-                        + "<interface>"
-                        + "<name>eth1</name>"
-                        + "<description>Link to the lab</description>"
-                        + "<type>ethernetCsmacd</type>"
-                        + "<enabled>false</enabled>"
-                        + "</interface>"
+                "<interfaces xmlns=\"urn:ietf:params:xml:ns:yang:ietf-interfaces\"\n"
+                        + "    xmlns:iana-if-type=\"urn:ietf:params:xml:ns:yang:iana-if-type\"\n"
+                        + "    xmlns:vlan=\"http://example.com/vlan\">\n"
+                        + "  <interface>\n"
+                        + "    <name>eth0</name>\n"
+                        + "    <type>iana-if-type:ethernetCsmacd</type>\n"
+                        + "    <enabled>false</enabled>\n"
+                        + "  </interface>\n"
+                        + "  <interface>\n"
+                        + "    <name>eth1</name>\n"
+                        + "    <type>iana-if-type:ethernetCsmacd</type>\n"
+                        + "    <enabled>true</enabled>\n"
+                        + "    <vlan:vlan-tagging>true</vlan:vlan-tagging>\n"
+                        + "  </interface>\n"
+                        + "  <interface>\n"
+                        + "    <name>eth1.10</name>\n"
+                        + "    <type>iana-if-type:l2vlan</type>\n"
+                        + "    <enabled>true</enabled>\n"
+                        + "    <vlan:base-interface>eth1</vlan:base-interface>\n"
+                        + "    <vlan:vlan-id>10</vlan:vlan-id>\n"
+                        + "  </interface>\n"
+                        + "  <interface>\n"
+                        + "    <name>lo1</name>\n"
+                        + "    <type>iana-if-type:softwareLoopback</type>\n"
+                        + "    <enabled>true</enabled>\n"
+                        + "  </interface>\n"
                         + "</interfaces>";
         String json =
-                "{\"interfaces\":{\"interface\":["
-                        + "{\"name\":\"eth0\","
-                        + "\"description\":\"Uplink to the core network\","
-                        + "\"type\":\"ethernetCsmacd\",\"enabled\":true,"
-                        + "\"ipv4\":{\"address\":{\"ip\":\"192.0.2.10\","
-                        + "\"prefix-length\":24}}},"
-                        + "{\"name\":\"eth1\","
-                        + "\"description\":\"Link to the lab\","
-                        + "\"type\":\"ethernetCsmacd\",\"enabled\":false}"
-                        + "]}}";
+                "{\n"
+                        + "  \"ietf-interfaces:interfaces\": {\n"
+                        + "    \"interface\": [\n"
+                        + "      {\n"
+                        + "        \"enabled\": true,\n"
+                        + "        \"name\": \"lo1\",\n"
+                        + "        \"type\": \"iana-if-type:softwareLoopback\"\n"
+                        + "      },\n"
+                        + "      {\n"
+                        + "        \"vlan:vlan-id\": 10,\n"
+                        + "        \"enabled\": true,\n"
+                        + "        \"type\": \"iana-if-type:l2vlan\",\n"
+                        + "        \"vlan:base-interface\": \"eth1\",\n"
+                        + "        \"name\": \"eth1.10\"\n"
+                        + "      },\n"
+                        + "      {\n"
+                        + "        \"enabled\": false,\n"
+                        + "        \"type\": \"iana-if-type:ethernetCsmacd\",\n"
+                        + "        \"name\": \"eth0\"\n"
+                        + "      },\n"
+                        + "      {\n"
+                        + "        \"vlan:vlan-tagging\": true,\n"
+                        + "        \"name\": \"eth1\",\n"
+                        + "        \"enabled\": true,\n"
+                        + "        \"type\": \"iana-if-type:ethernetCsmacd\"\n"
+                        + "      }\n"
+                        + "    ]\n"
+                        + "  }\n"
+                        + "}";
         YangNormalizer normalizer = SchemaIndependentNormalizer.create();
 
         System.out.println("=== YANG DATA NORMALIZATION ===");
@@ -66,6 +96,7 @@ public final class SimpleDemo {
 
         System.out.println("3) AST (los tres documentos producen este arbol)");
         System.out.println("XML:");
+        System.out.println(YangTreeFormatter.format(xmlTree));
         System.out.println(asciiTree(YangTreeFormatter.format(xmlTree)));
         System.out.println("JSON:");
         System.out.println(asciiTree(YangTreeFormatter.format(jsonTree)));

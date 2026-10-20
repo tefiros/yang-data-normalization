@@ -40,7 +40,12 @@ normalized size, and the fingerprints, run:
 gradlew runDemo
 ```
 
-The demo is implemented in
+The demo uses an adapted configuration excerpt from Appendix D of
+[RFC 7223](https://datatracker.ietf.org/doc/html/rfc7223#appendix-D), including
+the VLAN augmentation. Its XML and JSON deliberately list the interfaces in
+different orders; this is permitted because the RFC 7223 `interface` list uses
+the default `ordered-by system`. JSON object member order also has no
+significance. It is implemented in
 [`SimpleDemo.java`](src/main/java/com/telefonica/yang/normalization/tool/SimpleDemo.java).
 
 ## Normalization model
