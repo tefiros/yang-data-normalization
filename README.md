@@ -2,7 +2,7 @@
 
 Java 8 library that implements the schema-independent normalization procedure
 described by
-[`draft-mendez-opsawg-yang-state-normalization`](https://github.com/ana-mp26/yang-state-normalization).
+[`draft-mendez-opsawg-yang-normalization`](https://github.com/ana-mp26/yang-normalization).
 Equivalent XML, RFC 7951 JSON, and RFC 9254 CBOR representations are converted
 to a common abstract syntax tree (AST), deterministically ordered, and encoded
 as an unambiguous byte sequence suitable for comparison, hashing, or signing.
